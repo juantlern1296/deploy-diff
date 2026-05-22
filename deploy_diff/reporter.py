@@ -46,6 +46,10 @@ class Report:
             indent=indent,
         )
 
+    def has_changes(self) -> bool:
+        """Return True if there are any added, removed, or modified entries."""
+        return (self.summary.added + self.summary.removed + self.summary.modified) > 0
+
 
 def build_report(
     changes: List[LayerChange],
