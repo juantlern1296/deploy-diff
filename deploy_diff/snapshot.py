@@ -56,7 +56,17 @@ def load_snapshot(reference: str, directory: Optional[Path] = None) -> Snapshot:
     if not path.exists():
         raise SnapshotError(f"No snapshot found for '{reference}' at {path}")
     with open(path, "r", encoding="utf-8") as fh:
-        data = json.load(fh)
+        try:
+            data = json.load(fh)
+        except json.JSONDecodeError as exc:
+            raise SnapshotError(
+                f"Snapshot file for '{reference}' is corrupted: {exc}"
+            ) from exc
+    missing = {f for f in ("reference", "image_id", "layers", "created_at")} - data.keys()
+    if missing:
+        raise SnapshotError(
+            f"Snapshot file for '{reference}' is missing fields: {', '.join(sorted(missing))}"
+        )
     return Snapshot(**data)
 
 
