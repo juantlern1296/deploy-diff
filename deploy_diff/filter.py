@@ -53,6 +53,15 @@ class ChangeFilter:
         """Return a filtered list of changes."""
         return [c for c in changes if self.matches(c)]
 
+    def is_empty(self) -> bool:
+        """Return True if no filter rules are active (all changes would pass)."""
+        return (
+            self.kinds is None
+            and self.include_glob is None
+            and self.exclude_glob is None
+            and self._include_re is None
+        )
+
 
 def filter_changes(
     changes: Iterable[LayerChange],
