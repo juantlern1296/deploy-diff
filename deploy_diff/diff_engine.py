@@ -73,3 +73,12 @@ def summary(changes: list[LayerChange]) -> dict[str, int]:
     for change in changes:
         counts[change.kind.value] += 1
     return counts
+
+
+def has_changes(changes: list[LayerChange]) -> bool:
+    """Return True if there are any added or removed layers in *changes*.
+
+    Useful as a quick boolean check before deciding whether to print a diff
+    or fail a CI step.
+    """
+    return any(c.kind in (ChangeKind.ADDED, ChangeKind.REMOVED) for c in changes)
