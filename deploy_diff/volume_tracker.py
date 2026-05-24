@@ -52,6 +52,19 @@ class VolumeReport:
     def is_empty(self) -> bool:
         return self.total == 0
 
+    def summary(self) -> str:
+        """Return a short human-readable summary of the volume changes."""
+        if self.is_empty():
+            return "No volume changes."
+        parts = []
+        if self.added:
+            parts.append(f"{len(self.added)} added")
+        if self.removed:
+            parts.append(f"{len(self.removed)} removed")
+        if self.modified:
+            parts.append(f"{len(self.modified)} modified")
+        return "Volume changes: " + ", ".join(parts) + "."
+
 
 def _parse_volumes(raw: object) -> Set[str]:
     """Normalise the Volumes field from an image config (dict or None)."""
